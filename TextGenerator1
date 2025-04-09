@@ -1,0 +1,23 @@
+!pip install transformers gradio torch --quiet
+
+from transformers import pipeline
+import gradio as gr
+
+# Load a lightweight GPT-2 model (DistilGPT-2 is faster)
+generator = pipeline("text-generation", model="distilgpt2")
+
+# Function to generate text
+def generate_text(prompt):
+    result = generator(prompt, max_length=50, num_return_sequences=1)
+    return result[0]['generated_text']
+
+# Gradio interface
+iface = gr.Interface(
+    fn=generate_text,
+    inputs="text",
+    outputs="text",
+    title="Fast Text Generator",
+    description="Enter a prompt and see quick text generation."
+)
+
+iface.launch(share=True)
