@@ -1,0 +1,30 @@
+!pip install google-generativeai gradio --quiet
+
+import google.generativeai as genai
+import gradio as gr
+
+# 🔹 Set up API Key (Replace 'YOUR_API_KEY' with your actual API key)
+genai.configure(api_key="AIzaSyDnMG3av2_FdnX8oD6l7Zfd_SMAK2PwGVw")
+
+# 🔹 Use the free version of Gemini
+model = genai.GenerativeModel("gemini-pro")  # "gemini-pro-latest" can also be used
+
+# 🔹 Function to generate text (with token limit for speed)
+def generate_text(prompt):
+    try:
+        response = model.generate_content(prompt, generation_config={"max_output_tokens": 50})
+        return response.text
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+# 🔹 Gradio interface
+iface = gr.Interface(
+    fn=generate_text,
+    inputs="text",
+    outputs="text",
+    title="Free Gemini AI Text Generator",
+    description="Enter a prompt and get AI-generated text using the free Gemini API."
+)
+
+# 🔹 Launch Gradio app
+iface.launch(share=True)
